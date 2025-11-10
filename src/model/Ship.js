@@ -2,7 +2,7 @@ class Ship {
   #length;
   #hits;
   #sunk;
-  constructor(length = 1, hits = 0, sunk = false) {
+  constructor(length = 2, hits = 0, sunk = false) {
     this.#length = length;
     this.#hits = hits;
     this.#sunk = sunk;
