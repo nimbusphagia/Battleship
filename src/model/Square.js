@@ -1,4 +1,4 @@
-class Square {
+class square {
   #ship;
   #hit;
   constructor(ship = null, hit = false) {
@@ -8,18 +8,19 @@ class Square {
   get ship() {
     return this.#ship;
   }
-  get hit() {
+  get isHit() {
     return this.#hit;
   }
-  set hit(hit) {
-    if (hit === true || hit === false) {
-      this.#hit = hit;
-    } else {
-      return;
-    }
-  }
+
   set ship(ship) {
     this.#ship = ship;
   }
+  hit() {
+    if (this.#hit !== true) {
+      this.#hit = true;
+    } else {
+      throw new Error("Can't hit the same square twice.");
+    }
+  }
 }
-export default Square;
+export default square;

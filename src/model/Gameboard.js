@@ -12,6 +12,12 @@ class Gameboard {
   get board() {
     return this.#board;
   }
+  get ships() {
+    return this.#ships;
+  }
+  get missedSqr() {
+    return this.#missedSqr;
+  }
   #createBoard() {
     const map = [];
     for (let i = 0; i < 10; i++) {
@@ -63,29 +69,30 @@ class Gameboard {
       }
       this.#ships.push(ship);
     } catch (e) {
-      console.error(e);
+      return e.message;
     }
   }
   receiveAttack(coord) {
     const [x, y] = coord;
     const square = this.#board[x][y];
-    if (square.hit) {
+    if (square.isHit) {
       throw new Error("Can't hit a square twice");
     }
     if (square.ship !== null && !square.ship.sunk) {
       square.ship.hit();
-      square.hit(true);
+      square.hit();
       if (square.ship.isSunk()) {
-        this.checkGamestate();
+        return this.checkGamestate();
       }
     } else {
+      square.hit();
       this.#missedSqr.push(coord);
     }
   }
   checkGamestate() {
     const sunkenShips = this.#ships.filter((ship) => ship.isSunk());
     if (sunkenShips.length === this.#ships.length) {
-      console.log("All ships have sunk");
+      return "All ships have sunk";
     }
   }
 }
