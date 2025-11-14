@@ -6,11 +6,39 @@
     <title>Battleship!</title>
   </head>
   <body>
-    <navbar></navbar>
+    <header>
+      <nav>
+        <div class="navLogo">Battleship</div>
+        <div class="navTools">
+          <button type="button" class="navNewGame">New Game</button>
+          <button class="themeToggle">DM</button>
+        </div>
+      </nav>
+    </header>
     <main>
-      <div class="playCont left"></div>
-      <div class="playCont right"></div>
+      <div class="game">
+        <div id="gameMessage">MOCK MESSAGE</div>
+        <div class="gameBoards">
+          <div class="player1">
+            <div class="board"></div>
+            <div class="name">P1 NAME</div>
+          </div>
+          <div class="player2">
+            <div class="board"></div>
+            <div class="name">P2 NAME</div>
+          </div>
+        </div>
+      </div>
     </main>
-    <footer></footer>
+    <footer>
+      <div class="contactInfo">
+        <p class="author">
+          Created by
+          <a class="link" href="https://github.com/nimbusphagia" target="blank"
+            >Ignacio Machuca</a
+          >
+        </p>
+      </div>
+    </footer>
   </body>
 </html>

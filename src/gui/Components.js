@@ -7,8 +7,14 @@ class Components {
     this.main = document.querySelector("main");
     this.footer = document.querySelector("footer");
   }
-  async playersPrompt() {}
-
+  //incomplete
+  async playersPrompt() {
+    const popup = document.createElement("div");
+    popup.classList.add("popup");
+    popup.appendChild();
+    this.body.appendChild(popup);
+    showVeil(this.main, popup);
+  }
   showVeil(bg, node) {
     const veil = document.createElement("div");
     veil.classList.add("veil");
