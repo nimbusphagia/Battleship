@@ -1,15 +1,20 @@
 import Components from "./Components.js";
-async function renderGame() {
+function renderGame() {
   let p1 = null;
   let p2 = null;
+  const gameContainer = document.querySelector(".game");
   const gui = new Components();
-  const renderStart = async () => {
-    const ngBtn = document.createElement("button");
-    ngBtn.textContent = "New Game";
-    ngBtn.classList.add("newGameBtn");
-    ngBtn.addEventListener("click", async () => {
-      [p1, p2] = await gui.playersPrompt();
-      gui.renderGameboards(p1, p2);
+  const renderStart = () => {
+    const newGameBtn = document.createElement("button");
+    newGameBtn.textContent = "New Game";
+    newGameBtn.classList.add("newGameBtn");
+    gameContainer.appendChild(newGameBtn);
+    gui.veil(gameContainer, newGameBtn);
+    newGameBtn.addEventListener("click", () => {
+      gui.removeVeil(newGameBtn);
+      const playersForm = gui.promptGameMode();
+      gui.popUp(playersForm);
+      newGameBtn.remove();
     });
   };
   renderStart();
