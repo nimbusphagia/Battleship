@@ -1,2 +1,3 @@
 import "./css/main.css";
-console.log("working");
+import renderGame from "./gui/renderGame.js";
+renderGame();
