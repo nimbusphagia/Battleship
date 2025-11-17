@@ -1,3 +1,4 @@
+import Ship from "../model/Ship.js";
 import lib from "./lib.js";
 class GamePlay {
   gui;
@@ -55,11 +56,50 @@ class GamePlay {
     nodeBoard.appendChild(startBtn);
     this.gui.multiVeil(nodeBoard, startBtn);
     //INPUT SHIPS HERE!!!!
+    startBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const coordinates = this.inputCoordinates();
+      const ships = this.createShips();
+      for (let i = 0; i < ships.length; i++) {
+        player.board.placeShip(ships[i], coordinates[i], "hor");
+      }
+      this.gui.removeMultiVeil("", startBtn);
+      startBtn.remove();
+      //ENABLE ATTACKS
+      this.enableSquares(nodeBoard);
+    })
   }
-  inputShips() {
+  inputCoordinates() {
     //MOCK INPUT
-    const shipPositions = [[0, 0], [5, 5], [7, 8], [3, 7]];
+    const shipPositions = [[9, 3], [8, 1], [8, 5], [9, 7], [5, 0], [6, 7], [1, 8], [4, 4], [3, 3], [0, 0]];
     return shipPositions;
+  }
+  createShips() {
+    //MOCK INPUT
+    const small = [new Ship(1), new Ship(1), new Ship(1), new Ship(1)];
+    const mid = [new Ship(2), new Ship(2), new Ship(2)];
+    const large = [new Ship(3), new Ship(3)];
+    const largest = [new Ship(4)];
+    return small.concat(mid, large, largest);
+  }
+  enableSquares(boardNode) {
+    boardNode.addEventListener("click", (e) => {
+      if (e.target.classList.contains("boardSquare")) {
+        const rawCoord = e.target.classList[2];
+        const realCoord = this.translateCoord(rawCoord);
+        console.log(rawCoord, realCoord);
+      }
+    });
+  }
+  translateCoord(className) {
+    const x = className[0];
+    const y = className.slice(1); // gets "10", "5", etc.
+
+    const alph = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"];
+    const row = alph.indexOf(x);
+    const col = parseInt(y, 10) - 1;
+
+    return [row, col];
   }
   apllyHit(player) {
 
