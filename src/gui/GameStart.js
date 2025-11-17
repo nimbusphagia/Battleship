@@ -1,10 +1,12 @@
 import pvpIcon from "../assets/icons/pvpSword.png";
 import pcIcon from "../assets/icons/computer.png";
 import closeIcon from "../assets/icons/closeBtn.png";
+import lib from "./lib.js";
 import Player from "../model/Player.js";
 class GameStart {
   #p1;
   #p2;
+  gui;
   body;
   main;
   footer;
@@ -12,6 +14,7 @@ class GameStart {
     this.body = document.body;
     this.main = document.querySelector("main");
     this.footer = document.querySelector("footer");
+    this.gui = lib();
   }
   get p1() { return this.#p1 };
   get p2() { return this.#p2 };
@@ -27,36 +30,16 @@ class GameStart {
     popup.appendChild(header);
     popup.appendChild(node);
     this.main.appendChild(popup);
-    this.veil(this.main, popup);
+    this.gui.veil(this.main, popup);
     closeBtn.addEventListener("click", () => {
-      this.removeVeil(popup);
+      this.gui.removeVeil(popup);
       popup.remove();
       if (gamephase === "start") this.newGameButton();
     });
     return popup;
   }
 
-  veil(bg, node) {
-    if (!document.querySelector(".veil")) {
-      const veil = document.createElement("div");
-      veil.classList.add("veil");
-      bg.classList.add("relative");
-      bg.append(veil);
 
-    } else {
-      const oldOnTop = document.querySelector(".ontop");
-      if (oldOnTop) oldOnTop.classList.remove("ontop")
-    }
-    node.classList.add("ontop");
-  }
-  removeVeil(node) {
-    const veil = document.querySelector(".veil");
-    if (!veil) return;
-
-    veil.parentElement.classList.remove("relative");
-    veil.remove();
-    node.classList.remove("ontop");
-  }
   promptGameMode() {
     const container = document.createElement("div");
     container.classList.add("promptMode");
@@ -108,7 +91,7 @@ class GameStart {
         this.#p2 = new Player(p2Input.value, true);
       }
       const popup = form.parentElement;
-      this.removeVeil(popup);
+      this.gui.removeVeil(popup);
     });
 
     form.appendChild(player1);
@@ -148,9 +131,9 @@ class GameStart {
     newGameBtn.textContent = "New Game";
     newGameBtn.classList.add("newGameBtn");
     this.main.appendChild(newGameBtn);
-    this.veil(this.main, newGameBtn);
+    this.gui.veil(this.main, newGameBtn);
     newGameBtn.addEventListener("click", () => {
-      this.removeVeil(newGameBtn);
+      this.gui.removeVeil(newGameBtn);
       const playersForm = this.promptGameMode();
       this.popUp(playersForm);
       newGameBtn.remove();

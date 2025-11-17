@@ -30,6 +30,7 @@ body {
   overflow: hidden;
   font-family: Helvetica;
   --navColor: #f53b57;
+  --offset: translate(-42%, -30%);
 }
 header {
   display:grid;
@@ -90,16 +91,19 @@ footer {
 }
 .name {
   margin: auto;
+  padding-left:1em;
 }
 /*VEIL, BUTTONS, LINKS*/
 a{
+  display: inline-block;
   text-decoration:none;
   color: black;
   font-weight:550;
+  transition: transform 0.15s ease;
 }
 a:hover{
   cursor:pointer;
-  transform:scale(1.03);
+  transform:scale(1.01);
 }
 button{
   background:none;
@@ -121,6 +125,18 @@ button:hover{
   background: rgba(0, 0, 0, 0.05); /*COLOR*/
   z-index: 10;
 }
+.multiVeil {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(3px); /*BLUR*/
+  -webkit-backdrop-filter: blur(3px); /*BLUR*/
+  background: rgba(0, 0, 0, 0.01); /*COLOR*/
+  padding:5px;
+  z-index: 10;
+}
 .ontop {
   position: absolute;
   top: 50%;
@@ -128,8 +144,42 @@ button:hover{
   transform: translate(-50%, -50%);
   z-index: 20;
 }
+.offsetOntop{
+  position:absolute;
+  top: 50%;
+  left: 50%;
+ transform: var(--offset);
+  z-index: 20;
+}
 .relative {
   position: relative;
+
+}
+.gameBtn{
+ font-family: "Neotriad";
+  background: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+}
+.gameBtn:hover{
+  color: white;
+
+}
+.placeShipsBtn{
+  border:3.5px solid black;
+  color: black;
+  font-size:32px;
+}
+.placeShipsBtn:hover{
+  background-color: black;
+  transform: var(--offset) scale(1.03);
+}
+.placeShipsBtn:active{
+
+  transform: var(--offset);
 }
 .newGameBtn {
   font-family: "Neotriad";
