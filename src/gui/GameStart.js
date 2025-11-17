@@ -31,7 +31,7 @@ class GameStart {
     closeBtn.addEventListener("click", () => {
       this.removeVeil(popup);
       popup.remove();
-      if (gamephase === "start") this.renderNewGameButton();
+      if (gamephase === "start") this.newGameButton();
     });
     return popup;
   }
@@ -107,6 +107,8 @@ class GameStart {
       } else {
         this.#p2 = new Player(p2Input.value, true);
       }
+      const popup = form.parentElement;
+      this.removeVeil(popup);
     });
 
     form.appendChild(player1);

@@ -29,9 +29,13 @@ body {
   grid-template-rows: 8% 84% 8%;
   overflow: hidden;
   font-family: Helvetica;
+  --navColor: #f53b57;
 }
 header {
-  margin: auto 0;
+  display:grid;
+  align-items:center;
+  height:100%;
+  background:var(--navColor);
 }
 nav {
   display: flex;
@@ -55,7 +59,18 @@ footer {
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: end;
+  background-color: #EDEDED;
+}
+/*GENERAL UI*/
+.navLogo{
+  font-family: "Neotriad";
+  font-size: 36px;
+  color:white;
+}
+.contactInfo{
+  font-size:16px;
+  padding-bottom:20px;
 }
 /*GAME CONTENT*/
 #gameMessage {
@@ -70,15 +85,31 @@ footer {
   height: 100%;
   display: grid;
   grid-template-rows: 90% 10%;
+  align-items:center;
+  justify-content:center;
 }
 .name {
   margin: auto;
 }
-/*boards*/
-.board {
-  border: 1px solid black;
-}
 /*VEIL, BUTTONS, LINKS*/
+a{
+  text-decoration:none;
+  color: black;
+  font-weight:550;
+}
+a:hover{
+  cursor:pointer;
+  transform:scale(1.03);
+}
+button{
+  background:none;
+  border: 1.8px solid black;
+  border-radius: 4px;
+}
+button:hover{
+  cursor:pointer;
+  transform:scale(1.01);
+}
 .veil {
   position: absolute;
   top: 0;
@@ -102,10 +133,10 @@ footer {
 }
 .newGameBtn {
   font-family: "Neotriad";
-  border: none;
   background: none;
-  font-size: 45px;
-  border: 4px solid black;
+  font-size: 50px;
+  border: 5px solid var(--navColor);
+  color: var(--navColor);
   border-radius: 5px;
   padding: 10px;
   cursor: pointer;
@@ -113,7 +144,7 @@ footer {
 }
 .newGameBtn:hover {
   transform: translate(-50%, -50%) scale(1.03);
-  background-color: black;
+  background-color: var(--navColor);
   color: white;
 }
 .newGameBtn:active {
@@ -202,10 +233,44 @@ footer {
   display:flex;
   flex-direction: column;
   align-items:center;
-  justify-content:space-around;
+  justify-content: center;
+  gap: 20px;
   height: 100px;
 }
 .playerInput input{
   font-size:20px;
   text-align:center;
+}
+/*BOARDS*/
+.rowContainer {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+.board{
+  display:grid;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  height:500px;
+  width:580px;
+
+}
+.boardGridMember{
+  height:100%;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.colIndicator{
+  border-bottom: 1px solid black;
+}
+.rowIndicator{
+  border-right: 1px solid black;
+}
+.boardSquare{
+  border-right:1px solid black;
+  border-bottom:1px solid black;
+}
+.boardSquare:hover{
+  background-color:black;
+  cursor:pointer;
 }

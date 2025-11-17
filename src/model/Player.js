@@ -8,5 +8,8 @@ class Player {
     this.#type = type;
     this.#board = new Gameboard();
   }
+  get name() { return this.#name };
+  get type() { return this.#type };
+  get board() { return this.#board };
 }
 export default Player;
