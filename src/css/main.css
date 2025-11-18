@@ -31,7 +31,10 @@ body {
   font-family: Helvetica;
   --navColor: #f53b57;
   --offset: translate(-42%, -30%);
-  --boardBorder: 2px solid black;
+  --boardBorder: 2.5px solid black;
+  --shipHit: #3667EB;
+  --missHit:#FFE5E5;
+  --blocked:#8a7566;
 }
 header {
   display:grid;
@@ -47,6 +50,7 @@ nav {
 main {
   width: 100%;
   height: 100%;
+  background-color: rgb(0,0,0,0.05);
 }
 .game {
   box-sizing: border-box;
@@ -77,6 +81,12 @@ footer {
 /*GAME CONTENT*/
 #gameMessage {
   margin: auto;
+  transition: transform 0.2s ease;
+}
+.msgWin{
+  transform: scale(3);
+  font-family: "Neotriad";
+  color: var(--navColor);
 }
 .gameBoards {
   display: grid;
@@ -321,25 +331,47 @@ button:hover{
 .rowIndicator, .colIndicator{
   font-family: "Neotriad";
   font-size:1.2em;
-
+  color: var(--blocked);
+  border-color:var(--blocked);
 }
 .boardSquare{
   border-right:var(--boardBorder);
   border-bottom:var(--boardBorder);
+  border-color:var(--blocked);
+
 }
 .playing .boardSquare{
-  background-color: rgb(20,20,60,0.05);
+  background-color: transparent;
+  border-color: black;
+}
+.playing .rowIndicator, .playing .colIndicator{
+  color:black;
+  border-color: black;
+
 }
 .playing .unhit:hover{
-  background-color:black;
+  background-image: url("../assets/icons/rocket.png");
+  background-position: center;
+  background-size: 70%;
+  background-repeat: no-repeat;
   cursor:pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+.playing .unhit:active{
+  background-color: rgba(0, 0, 0, 0.05);;
 }
 
 .boardSquare.shipHit{
-  background-color:blue;
-  border-color: blue;
+  background-image: url("../assets/icons/explode.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size:78%;
 }
 .boardSquare.miss{
-  background-color: red;
-  border-color:red;
+  background-image: url("../assets/icons/close.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 55%; 
+  width:100%;
+  height:100%;
 }

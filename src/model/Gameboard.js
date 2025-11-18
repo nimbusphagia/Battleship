@@ -82,18 +82,19 @@ class Gameboard {
       square.ship.hit();
       square.hit();
       if (square.ship.isSunk()) {
-        return this.checkGamestate();
+        return this.isLost();
       }
     } else {
       square.hit();
       this.#missedSqr.push(coord);
     }
   }
-  checkGamestate() {
+  isLost() {
     const sunkenShips = this.#ships.filter((ship) => ship.isSunk());
     if (sunkenShips.length === this.#ships.length) {
-      return "All ships have sunk";
+      return true;
     }
+    return false;
   }
 }
 export default Gameboard;
