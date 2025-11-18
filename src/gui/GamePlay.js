@@ -2,8 +2,12 @@ import Ship from "../model/Ship.js";
 import lib from "./lib.js";
 class GamePlay {
   gui;
+  currentPlayer;
+  players;
+  phase;
   constructor() {
     this.gui = lib();
+    this.phase = 0;
   }
   createBoard() {
     const board = document.createElement("div");
@@ -25,7 +29,7 @@ class GamePlay {
           col.textContent = letter; // a–j
         } else {
           className = letter + j;   // a1, b4, j10, etc.
-          col.classList.add("boardSquare");
+          col.classList.add("boardSquare", "unhit");
         }
         col.classList.add("boardGridMember", className);
         row.appendChild(col);
@@ -42,10 +46,10 @@ class GamePlay {
   }
   enablePlaceBtns(players) {
     const [board1, board2] = document.querySelectorAll(".board");
-    const [p1, p2] = players;
+    this.players = players;
     if (board1 && board2) {
-      this.placeShips(p1, board1);
-      this.placeShips(p2, board2);
+      this.placeShips(this.players[0], board1);
+      this.placeShips(this.players[1], board2);
 
     }
   }
@@ -58,15 +62,22 @@ class GamePlay {
     //INPUT SHIPS HERE!!!!
     startBtn.addEventListener("click", (e) => {
       e.preventDefault();
+      //START PLACING PHASE
+      if (this.phase === 0) this.phase = 1;
+      //Get coordinates
       const coordinates = this.inputCoordinates();
       const ships = this.createShips();
       for (let i = 0; i < ships.length; i++) {
         player.board.placeShip(ships[i], coordinates[i], "hor");
       }
+      //STOP PLACING PHASE
       this.gui.removeMultiVeil("", startBtn);
       startBtn.remove();
-      //ENABLE ATTACKS
-      this.enableSquares(nodeBoard);
+      //CHECK FOR END OF PHASE - GO ON
+      if (this.players[0].board.ships.length === 10 && this.players[1].board.ships.length === 10) {
+        this.phase = 2;
+        this.playGame();
+      }
     })
   }
   inputCoordinates() {
@@ -82,14 +93,48 @@ class GamePlay {
     const largest = [new Ship(4)];
     return small.concat(mid, large, largest);
   }
-  enableSquares(boardNode) {
-    boardNode.addEventListener("click", (e) => {
-      if (e.target.classList.contains("boardSquare")) {
-        const rawCoord = e.target.classList[2];
-        const realCoord = this.translateCoord(rawCoord);
-        console.log(rawCoord, realCoord);
+  playGame() {
+    this.currentPlayer = this.players[0];
+    const game = document.querySelector(".game");
+    const board1 = document.querySelector(".player1 > .board");
+    const board2 = document.querySelector(".player2 > .board");
+    board1.classList.add("playing");
+    game.addEventListener("click", (e) => {
+      if (this.currentPlayer === this.players[0]) { //PLAYER 1
+
+        if (e.target.closest(".player1")) {
+          if (e.target.classList.contains("boardSquare") && !e.target.classList.contains("hit")) {
+
+            this.enableSquares(e.target);
+            this.currentPlayer = this.players[1];
+            board1.classList.remove("playing");
+            board2.classList.add("playing");
+          }
+        }
+      } else if (this.currentPlayer === this.players[1] && this.currentPlayer.type) { //PLAYER 2
+        if (e.target.closest(".player2")) {
+          if (e.target.classList.contains("boardSquare") && !e.target.classList.contains("hit")) {
+
+            this.enableSquares(e.target);
+            this.currentPlayer = this.players[0];
+            board2.classList.remove("playing");
+            board1.classList.add("playing");
+          }
+        }
       }
-    });
+      //COMPUTER
+    })
+  }
+  enableSquares(node) {
+    const rawCoord = node.classList[3];
+    const realCoord = this.translateCoord(rawCoord);
+    this.applyHit(realCoord);
+    node.classList.replace("unhit", "hit");
+    if (!this.hasCoord(this.currentPlayer.board.missedSqr, realCoord)) {
+      node.classList.add("shipHit");
+    } else {
+      node.classList.add("miss");
+    }
   }
   translateCoord(className) {
     const x = className[0];
@@ -101,8 +146,11 @@ class GamePlay {
 
     return [row, col];
   }
-  apllyHit(player) {
-
+  hasCoord(arr, coord) {
+    return arr.some(([x, y]) => x === coord[0] && y === coord[1]);
+  }
+  applyHit(coordinate) {
+    this.currentPlayer.board.receiveAttack(coordinate);
   }
 
 }

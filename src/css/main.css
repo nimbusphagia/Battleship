@@ -31,6 +31,7 @@ body {
   font-family: Helvetica;
   --navColor: #f53b57;
   --offset: translate(-42%, -30%);
+  --boardBorder: 2px solid black;
 }
 header {
   display:grid;
@@ -92,6 +93,8 @@ footer {
 .name {
   margin: auto;
   padding-left:1em;
+  font-family: "Neotriad";
+  font-size: 30px;
 }
 /*VEIL, BUTTONS, LINKS*/
 a{
@@ -301,7 +304,6 @@ button:hover{
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   height:500px;
   width:580px;
-
 }
 .boardGridMember{
   height:100%;
@@ -311,16 +313,33 @@ button:hover{
   align-items:center;
 }
 .colIndicator{
-  border-bottom: 1px solid black;
+  border-bottom: var(--boardBorder);
 }
 .rowIndicator{
-  border-right: 1px solid black;
+  border-right: var(--boardBorder);
+  }
+.rowIndicator, .colIndicator{
+  font-family: "Neotriad";
+  font-size:1.2em;
+
 }
 .boardSquare{
-  border-right:1px solid black;
-  border-bottom:1px solid black;
+  border-right:var(--boardBorder);
+  border-bottom:var(--boardBorder);
 }
-.boardSquare:hover{
+.playing .boardSquare{
+  background-color: rgb(20,20,60,0.05);
+}
+.playing .unhit:hover{
   background-color:black;
   cursor:pointer;
+}
+
+.boardSquare.shipHit{
+  background-color:blue;
+  border-color: blue;
+}
+.boardSquare.miss{
+  background-color: red;
+  border-color:red;
 }
