@@ -22,8 +22,12 @@ function lib() {
   }
   const removeMultiVeil = (nodeClass, node = null) => {
     if (node) {
-      const veil = document.querySelector(".multiVeil");
-      veil.parentElement.classList.remove("relative");
+      const parent = node.parentElement;
+      const siblings = document.querySelectorAll(".multiVeil");
+      const veil = parent.querySelector(".multiVeil");
+      if (siblings.length <= 1) {
+        parent.classList.remove("relative");
+      }
       veil.remove();
       node.classList.remove("offsetOntop");
     } else {
@@ -33,8 +37,6 @@ function lib() {
         const parentElement = v.parentElement;
         parentElement.classList.remove("relative");
         v.remove();
-        const node = parentElement.querySelector(nodeClass);
-        node.classList.remove("offsetOntop");
       }
     }
   }

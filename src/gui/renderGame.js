@@ -15,8 +15,10 @@ function renderGame() {
       p2 = start.p2;
       document.querySelector(".player1 .name").textContent = p1.name;
       document.querySelector(".player2 .name").textContent = p2.name;
+
       document.querySelector(".popup").remove();
       play.enablePlaceBtns([p1, p2]);
+
     }
   });
 

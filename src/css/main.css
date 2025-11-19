@@ -100,11 +100,17 @@ footer {
   align-items:center;
   justify-content:center;
 }
-.name {
+.playerInfo {
+  box-sizing:border-box;
   margin: auto;
   padding-left:1em;
   font-family: "Neotriad";
-  font-size: 30px;
+  color: var(--blocked);
+  display: flex;
+  width:100%;
+  height:100%;
+  justify-content: space-between;
+  padding: 10px 50px;
 }
 /*VEIL, BUTTONS, LINKS*/
 a{
@@ -374,4 +380,27 @@ button:hover{
   background-size: 55%; 
   width:100%;
   height:100%;
+}
+.playing + .playerInfo{
+  color:var(--navColor);
+}
+.name{
+    font-size: 30px;
+}
+.ships{
+  font-size:22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.live, .sunk{
+  width: 120px;
+  display: flex;
+  justify-content: space-between;
+}
+.computingIndicator{
+  font-family: "Neotriad";
+  font-size: 40px;
+  text-align: center;
+  color: var(--navColor);
 }

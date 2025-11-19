@@ -4,16 +4,21 @@ class Gameboard {
   #board;
   #missedSqr;
   #ships;
+  #sunkenShips;
   constructor() {
     this.#board = this.#createBoard();
     this.#missedSqr = [];
     this.#ships = [];
+    this.#sunkenShips = [];
   }
   get board() {
     return this.#board;
   }
   get ships() {
     return this.#ships;
+  }
+  get sunkenShips() {
+    return this.#sunkenShips;
   }
   get missedSqr() {
     return this.#missedSqr;
@@ -82,6 +87,8 @@ class Gameboard {
       square.ship.hit();
       square.hit();
       if (square.ship.isSunk()) {
+        const sunkShip = this.#ships.splice(this.#ships.indexOf(square.ship), 1)[0];
+        this.#sunkenShips.push(sunkShip);
         return this.isLost();
       }
     } else {
