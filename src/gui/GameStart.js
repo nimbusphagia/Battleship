@@ -44,7 +44,7 @@ class GameStart {
     const container = document.createElement("div");
     container.classList.add("promptMode");
     const pvp = this.createGameMode("Local PvP", pvpIcon);
-    const computer = this.createGameMode("vs Computer", pcIcon);
+    const computer = this.createGameMode("Computer", pcIcon);
     container.appendChild(pvp);
     container.appendChild(computer);
     container.addEventListener("click", (e) => {
@@ -78,20 +78,26 @@ class GameStart {
     const player2 = this.createPlayerForm(p2);
     const btn = document.createElement("button");
     btn.classList.add("formBtn");
+    btn.type = "button";
     btn.textContent = "Start";
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       const p1Input = document.getElementById("p1Input");
       const p2Input = document.getElementById("p2Input");
       const pcInput = document.getElementById("pcInput");
-      this.#p1 = new Player(p1Input.value, true);
-      if (pcInput) {
+      if (p1Input.value !== "") {
+        this.#p1 = new Player(p1Input.value, true);
+      }
+      if (pcInput && pcInput.value !== "") {
         this.#p2 = new Player(pcInput.value, false);
-      } else {
+      } else if (p2Input && p2Input.value !== "") {
         this.#p2 = new Player(p2Input.value, true);
       }
-      const popup = form.parentElement;
-      this.gui.removeVeil(popup);
+      if (this.#p1 && this.#p2) {
+        console.log(this.#p1, this.#p2);
+        const popup = form.parentElement;
+        this.gui.removeVeil(popup);
+      }
     });
 
     form.appendChild(player1);
@@ -121,9 +127,13 @@ class GameStart {
     input.id = inputId;
     input.value = inputValue;
     input.disabled = inputDisable;
+    input.required = true;
+    input.minLength = 3;
     input.maxLength = 20;
     inputContainer.appendChild(label);
     inputContainer.appendChild(input);
+    input.addEventListener("focus", () => label.style.color = "var(--blue)");
+    input.addEventListener("blur", () => label.style.color = "black");
     return inputContainer;
   }
   newGameButton() {
