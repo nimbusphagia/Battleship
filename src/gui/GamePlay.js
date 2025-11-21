@@ -1,5 +1,6 @@
 import Ship from "../model/Ship.js";
 import lib from "./lib.js";
+import shipHelper from "./shipHelper.js";
 class GamePlay {
   gui;
   currentPlayer;
@@ -57,24 +58,36 @@ class GamePlay {
   }
   placeShips(player, nodeBoard) {
     if (player.type) {
+      //CREATE BUTTONS
       const startBtn = document.createElement("button");
       startBtn.classList.add("gameBtn", "placeShipsBtn");
       startBtn.textContent = "Place ships";
       nodeBoard.appendChild(startBtn);
       this.gui.multiVeil(nodeBoard, startBtn);
-      //INPUT SHIPS HERE!!!!
       startBtn.addEventListener("click", (e) => {
         e.preventDefault();
         //START PLACING PHASE
         if (this.phase === 0) this.phase = 1;
-        //Get coordinates
-        const coordinates = this.inputCoordinates();
+        //Display Placing Ships Module
+        const shipModule = shipHelper();
+        const playerNode = nodeBoard.parentElement;
+        if (playerNode.classList.contains("player1")) {
+          const opponentNode = document.querySelector(".player2");
+          opponentNode.classList.add("relative");
+          opponentNode.appendChild(shipModule);
+        } else if (playerNode.classList.contains("player2")) {
+          const opponentNode = document.querySelector(".player1");
+          opponentNode.classList.add("relative");
+          opponentNode.appendChild(shipModule);
+
+        }
+        //Get coordinates & Place Ships
+        /*const coordinates = this.inputCoordinates();
         const ships = this.createShips();
 
         for (let i = 0; i < ships.length; i++) {
           player.board.placeShip(ships[i], coordinates[i], "hor");
-        }
-        //STOP PLACING PHASE
+        }        //STOP PLACING PHASE
         if (!this.players[1].type) {
           this.gui.removeMultiVeil("multiVeil");
           document.querySelector(".computingIndicator").remove();
@@ -86,7 +99,8 @@ class GamePlay {
         if (this.players[0].board.ships.length === ships.length && this.players[1].board.ships.length === ships.length) {
           this.phase = 2;
           this.playGame();
-        }
+        } */
+
       })
     } else {
       const computingSign = document.createElement("div");

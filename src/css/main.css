@@ -22,6 +22,7 @@ li {
   margin: 0;
   padding: 0;
 }
+
 /*MAIN CONTAINERS*/
 body {
   height: 100vh;
@@ -33,26 +34,30 @@ body {
   --offset: translate(-42%, -30%);
   --boardBorder: 2.5px solid black;
   --shipHit: #3667EB;
-  --missHit:#FFE5E5;
-  --blocked:#8a7566;
+  --missHit: #FFE5E5;
+  --blocked: #8a7566;
   --blue: #3667EB;
 }
+
 header {
-  display:grid;
-  align-items:center;
-  height:100%;
-  background:var(--navColor);
+  display: grid;
+  align-items: center;
+  height: 100%;
+  background: var(--navColor);
 }
+
 nav {
   display: flex;
   justify-content: space-between;
   padding: 0 18px;
 }
+
 main {
   width: 100%;
   height: 100%;
-  background-color: rgb(0,0,0,0.05);
+  background-color: rgb(0, 0, 0, 0.05);
 }
+
 .game {
   box-sizing: border-box;
   height: 100%;
@@ -61,6 +66,7 @@ main {
   display: grid;
   grid-template-rows: 10% 90%;
 }
+
 footer {
   height: 100%;
   width: 100%;
@@ -69,94 +75,114 @@ footer {
   align-items: end;
   background-color: #EDEDED;
 }
+
 /*GENERAL UI*/
-.navLogo{
+.navLogo {
   font-family: "Neotriad";
   font-size: 36px;
-  color:white;
+  color: white;
 }
-.contactInfo{
-  font-size:16px;
-  padding-bottom:20px;
+
+.contactInfo {
+  font-size: 16px;
+  padding-bottom: 20px;
 }
+
 /*GAME CONTENT*/
 #gameMessage {
   margin: auto;
   transition: transform 0.2s ease;
 }
-.msgWin{
+
+.msgWin {
   transform: scale(3);
   font-family: "Neotriad";
   color: var(--navColor);
 }
+
 .gameBoards {
   display: grid;
   grid-template-columns: 50% 50%;
 }
+
 .player1,
 .player2 {
   height: 100%;
   display: grid;
   grid-template-rows: 90% 10%;
-  align-items:center;
-  justify-content:center;
+  align-items: center;
+  justify-content: center;
 }
+
 .playerInfo {
-  box-sizing:border-box;
+  box-sizing: border-box;
   margin: auto;
-  padding-left:1em;
+  padding-left: 1em;
   font-family: "Neotriad";
   color: var(--blocked);
   display: flex;
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
   justify-content: space-between;
   padding: 10px 50px;
 }
+
 /*VEIL, BUTTONS, LINKS*/
-a{
+a {
   display: inline-block;
-  text-decoration:none;
+  text-decoration: none;
   color: black;
-  font-weight:550;
+  font-weight: 550;
   transition: transform 0.15s ease;
 }
-a:hover{
-  cursor:pointer;
-  transform:scale(1.01);
+
+a:hover {
+  cursor: pointer;
+  transform: scale(1.01);
 }
-button{
-  background:none;
+
+button {
+  background: none;
   border: 1.8px solid black;
   border-radius: 4px;
 }
-button:hover{
-  cursor:pointer;
-  transform:scale(1.01);
+
+button:hover {
+  cursor: pointer;
+  transform: scale(1.01);
 }
+
 .veil {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(3px); /*BLUR*/
-  -webkit-backdrop-filter: blur(3px); /*BLUR*/
-  background: rgba(0, 0, 0, 0.05); /*COLOR*/
+  backdrop-filter: blur(3px);
+  /*BLUR*/
+  -webkit-backdrop-filter: blur(3px);
+  /*BLUR*/
+  background: rgba(0, 0, 0, 0.05);
+  /*COLOR*/
   z-index: 10;
 }
+
 .multiVeil {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(3px); /*BLUR*/
-  -webkit-backdrop-filter: blur(3px); /*BLUR*/
-  background: rgba(0, 0, 0, 0.01); /*COLOR*/
-  padding:5px;
+  backdrop-filter: blur(3px);
+  /*BLUR*/
+  -webkit-backdrop-filter: blur(3px);
+  /*BLUR*/
+  background: rgba(0, 0, 0, 0.01);
+  /*COLOR*/
+  padding: 5px;
   z-index: 10;
 }
+
 .ontop {
   position: absolute;
   top: 50%;
@@ -164,19 +190,22 @@ button:hover{
   transform: translate(-50%, -50%);
   z-index: 20;
 }
-.offsetOntop{
-  position:absolute;
+
+.offsetOntop {
+  position: absolute;
   top: 50%;
   left: 50%;
- transform: var(--offset);
+  transform: var(--offset);
   z-index: 20;
 }
+
 .relative {
   position: relative;
 
 }
-.gameBtn{
- font-family: "Neotriad";
+
+.gameBtn {
+  font-family: "Neotriad";
   background: none;
   border-radius: 5px;
   padding: 10px;
@@ -184,42 +213,59 @@ button:hover{
   transition: transform 0.2s ease;
 
 }
-.gameBtn:hover{
+
+.gameBtn:hover {
   color: white;
 
 }
-.placeShipsBtn{
-  border:3.5px solid black;
+
+.placeShipsBtn {
+  border: none;
+  border-radius: 0;
+  border-bottom: 6px solid black;
   color: black;
-  font-size:32px;
+  font-size: 38px;
 }
-.placeShipsBtn:hover{
-  background-color: black;
+
+.placeShipsBtn:hover {
+  background-color: var(--shipHit);
+  color: white;
+  border-color: black;
+  border-radius: 3px;
   transform: var(--offset) scale(1.03);
 }
-.placeShipsBtn:active{
+
+.placeShipsBtn:active {
 
   transform: var(--offset);
 }
+
 .newGameBtn {
   font-family: "Neotriad";
-  background: none;
-  font-size: 50px;
-  border: 5px solid var(--navColor);
+  background: rgba(200, 200, 200, 0.1);
+  font-size: 60px;
+  border: none;
+  border-bottom: 8px solid var(--navColor);
   color: var(--navColor);
-  border-radius: 5px;
+  border-radius: 0;
   padding: 10px;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
+
 .newGameBtn:hover {
   transform: translate(-50%, -50%) scale(1.03);
   background-color: var(--navColor);
+  border-radius: 5px;
+  border-color: black;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   color: white;
 }
+
 .newGameBtn:active {
   transform: translate(-50%, -50%);
 }
+
 /*POP UP*/
 .popup {
   display: grid;
@@ -228,18 +274,23 @@ button:hover{
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   border-radius: 8px;
 }
-.small{
+
+.small {
   height: 250px;
 }
-.medium{
-  height:400px;
+
+.medium {
+  height: 400px;
 }
-.small .popupHeader{
+
+.small .popupHeader {
   padding: 8px 18px;
 }
-.medium .popupHeader{
+
+.medium .popupHeader {
   padding: 15px;
 }
+
 .popupHeader {
   box-sizing: border-box;
   height: 100%;
@@ -247,23 +298,27 @@ button:hover{
   justify-content: end;
   align-items: center;
 }
+
 .closeBtn {
   height: 80%;
   cursor: pointer;
 }
+
 .closeBtn:hover {
   transform: scale(1.1);
 }
+
 /*Gamemode*/
 
 .promptMode {
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
-  align.items: center;
+  align-items: center;
   gap: 50px;
   padding: 10px 50px 50px 50px;
 }
+
 .gamemode {
   display: flex;
   flex-direction: column;
@@ -271,186 +326,331 @@ button:hover{
   align-items: center;
   gap: 30px;
   padding: 20px;
-  border-radius: 5px;
+  border: none;
+  border-bottom: 6px solid black;
   transition: transform 0.3s ease;
 }
+
 .gamemode:hover {
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   /*background-color: var(--navColor);*/
   color: var(--navColor);
-  border-bottom: 4px solid var(--navColor);
+  border-radius: 3px;
+  border-color: var(--navColor);
   transform: scale(1.02);
 }
+
 .gamemode:active {
   background-color: rgba(0, 0, 0, 0.1);
 }
+
 .gamemodeIcon {
   height: 180px;
 }
-.gamemodeName{
+
+.gamemodeName {
   font-family: "Neotriad";
   font-size: 1.8em;
 }
+
 /*Player Form*/
-.formPlayers{
+.formPlayers {
   box-sizing: border-box;
   display: grid;
-  grid-template-columns:50% 50%;
+  grid-template-columns: 50% 50%;
   grid-template-rows: 70% 30%;
   gap: 10px;
   padding: 15px 30px 30px 30px;
-  width:550px;
+  width: 550px;
 }
-.formBtn{
+
+.formBtn {
   grid-row: 2/3;
-  grid-column:1/3;
+  grid-column: 1/3;
   margin: auto;
-  padding:5px 30px;
-  font-family:"Neotriad";
-  font-size:1.4em;
-  border:none;
-  border-bottom: 3px solid black;
+  padding: 5px 30px;
+  font-family: "Neotriad";
+  font-size: 1.4em;
+  border: none;
+  border-bottom: 4px solid black;
   border-radius: 0;
   color: black;
   transition: transform 0.3s ease;
 }
-.formBtn:hover{
-  background-color:var(--blue);
+
+.formBtn:hover {
+  background-color: var(--blue);
   border-radius: 5px;
-  color:white;
-  transform:scale(1.05);
+  color: white;
+  transform: scale(1.05);
 }
-.formBtn:focus{
-  outline:none;
-  background-color:var(--blue);
+
+.formBtn:focus {
+  outline: none;
+  background-color: var(--blue);
   border-radius: 5px;
-  color:white;
-  transform:scale(1.05);
+  color: white;
+  transform: scale(1.05);
 }
-label[for^="p"]{
-  font-family:"Neotriad";
-  font-size:1.4em;
+
+label[for^="p"] {
+  font-family: "Neotriad";
+  font-size: 1.4em;
 }
-.playerInput{
-  display:flex;
+
+.playerInput {
+  display: flex;
   flex-direction: column;
-  align-items:center;
+  align-items: center;
   justify-content: center;
   gap: 20px;
   height: 100px;
 }
-.playerInput input{
-  font-size:20px;
-  text-align:center;
-  height:1.3em;
-  width:10em;
-  border:none;
-  border-bottom: 3px solid black;
-  font-family:"Neotriad";
+
+.playerInput input {
+  font-size: 24px;
+  text-align: center;
+  height: 1.3em;
+  width: 9em;
+  border: none;
+  border-bottom: 4px solid black;
+  font-family: "Neotriad";
 }
-.playerInput input:focus{
-  background-color:#f5f5f5;
+
+.playerInput input:focus {
+  background-color: #f5f5f5;
   border-color: var(--blue);
+  border-radius: 5px;
   color: var(--blue);
   outline: none;
 }
+
 /*BOARDS*/
 .rowContainer {
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
-.board{
-  display:grid;
+
+.board {
+  display: grid;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  height:500px;
-  width:580px;
+  height: 500px;
+  width: 580px;
 }
-.boardGridMember{
-  height:100%;
-  width:100%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+
+.boardGridMember {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.colIndicator{
+
+.colIndicator {
   border-bottom: var(--boardBorder);
 }
-.rowIndicator{
+
+.rowIndicator {
   border-right: var(--boardBorder);
-  }
-.rowIndicator, .colIndicator{
-  font-family: "Neotriad";
-  font-size:1.2em;
-  color: var(--blocked);
-  border-color:var(--blocked);
 }
-.boardSquare{
-  border-right:var(--boardBorder);
-  border-bottom:var(--boardBorder);
-  border-color:var(--blocked);
+
+.rowIndicator,
+.colIndicator {
+  font-family: "Neotriad";
+  font-size: 1.2em;
+  color: var(--blocked);
+  border-color: var(--blocked);
+}
+
+.boardSquare {
+  border-right: var(--boardBorder);
+  border-bottom: var(--boardBorder);
+  border-color: var(--blocked);
 
 }
-.playing .boardSquare{
+
+.playing .boardSquare {
   background-color: transparent;
   border-color: black;
 }
-.playing .rowIndicator, .playing .colIndicator{
-  color:black;
+
+.playing .rowIndicator,
+.playing .colIndicator {
+  color: black;
   border-color: black;
 
 }
-.playing .unhit:hover{
+
+.playing .unhit:hover {
   background-image: url("../assets/icons/focus.png");
   background-position: center;
   background-size: 55%;
   background-repeat: no-repeat;
-  cursor:pointer;
+  cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
-.playing .unhit:active{
-  background-color: rgba(0, 0, 0, 0.05);;
+
+.playing .unhit:active {
+  background-color: rgba(0, 0, 0, 0.05);
+  ;
 }
 
-.boardSquare.shipHit{
+.boardSquare.shipHit {
   background-image: url("../assets/icons/explode.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size:78%;
+  background-size: 78%;
 }
-.boardSquare.miss{
+
+.boardSquare.miss {
   background-image: url("../assets/icons/close.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 55%; 
-  width:100%;
-  height:100%;
+  background-size: 55%;
+  width: 100%;
+  height: 100%;
 }
-.player1 .playing + .playerInfo{
-  color:var(--shipHit);
+
+.player1 .playing+.playerInfo {
+  color: var(--shipHit);
 }
-.player2 .playing + .playerInfo{
-  color:var(--navColor);
+
+.player2 .playing+.playerInfo {
+  color: var(--navColor);
 }
-.name{
-    font-size: 30px;
+
+.name {
+  font-size: 30px;
 }
-.ships{
-  font-size:22px;
+
+.ships {
+  font-size: 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-.live, .sunk{
+
+.live,
+.sunk {
   width: 120px;
   display: flex;
   justify-content: space-between;
 }
-.computingIndicator{
+
+.computingIndicator {
   font-family: "Neotriad";
-  font-size: 30px;
+  width: 70%;
+  font-size: 32px;
   text-align: center;
+  color: black;
+  padding: 10px 0;
+  border-bottom: 6px solid black;
+}
+
+/*SHIP MODULE*/
+.shipModule {
+  position: absolute;
+  z-index: 30;
+  background-color: white;
+  padding: 28px 35px 20px 35px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-44%, -52%);
+  height: 75%;
+  width: 62%;
+  display: grid;
+  grid-template-rows: 15% 70% 15%;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+  font-family: "Neotriad";
+  text-align: center;
+}
+
+.placeIndication {
+  font-size: 28px;
+  width: 100%;
+  color: var(--shipHit);
+}
+
+.shipDisplay {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.shipContainer,
+.shipModuleBtns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shipItem {
+  width: 85%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 20px;
+}
+
+.shipCounter {
+  background-color: var(--shipHit);
+  color: white;
+  width: 25px;
+  height: 25px;
+  margin: none;
+  line-height: 1.2;
+  padding: 3px;
+  border-radius: 8px;
+  font-size: 20px;
+}
+
+.shipImg {
+  height: 58px;
+}
+
+.shipModule button {
+  outline: none;
+  border: none;
+  background: transparet;
+  font-family: "Neotriad";
+  font-size: 24px;
+  padding: 7px 12px;
+}
+
+.shipModuleBtns {
+  height: 100%;
+}
+
+.resetPlaceBtn {
   color: var(--navColor);
-  padding-bottom: 10px;
+}
+
+.shipModule .playBtn {
+  color: var(--shipHit);
+  border-radius: 0;
+  border-bottom: 4px solid var(--shipHit);
+}
+
+.shipModule .playBtn:hover {
+  background-color: var(--shipHit);
+}
+
+.shipModule .resetPlaceBtn {
+  color: var(--navColor);
+  border-radius: 0;
   border-bottom: 4px solid var(--navColor);
+}
+
+.shipModule .resetPlaceBtn:hover {
+  background-color: var(--navColor);
+}
+
+.shipModule button:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  color: white;
+  border-radius: 5px;
+  border-color: black;
 }
