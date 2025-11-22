@@ -69,16 +69,15 @@ class GamePlay {
         //START PLACING PHASE
         if (this.phase === 0) this.phase = 1;
         //Display Placing Ships Module
-        const shipModule = shipHelper();
         const playerNode = nodeBoard.parentElement;
+        //P1
         if (playerNode.classList.contains("player1")) {
           const opponentNode = document.querySelector(".player2");
-          opponentNode.classList.add("relative");
-          opponentNode.appendChild(shipModule);
+          this.enablePlacing(startBtn, opponentNode, nodeBoard, player);
+          //P2
         } else if (playerNode.classList.contains("player2")) {
           const opponentNode = document.querySelector(".player1");
-          opponentNode.classList.add("relative");
-          opponentNode.appendChild(shipModule);
+          this.enablePlacing(startBtn, opponentNode, nodeBoard, player);
 
         }
         //Get coordinates & Place Ships
@@ -116,6 +115,128 @@ class GamePlay {
 
     }
   }
+
+  enablePlacing(startBtn, opponentNode, board, player) {
+    const shipModule = shipHelper();
+    opponentNode.classList.add("relative");
+    opponentNode.appendChild(shipModule);
+    this.gui.removeMultiVeil("", startBtn);
+    startBtn.style.display = "none";
+    board.classList.add("placing");
+
+    const small = [new Ship(1), new Ship(1), new Ship(1), new Ship(1)];
+    const mid = [new Ship(2), new Ship(2), new Ship(2)];
+    const large = [new Ship(3), new Ship(3)];
+    const largest = [new Ship(4)];
+
+    // VARIABLES DE ESTADO MANEJADAS POR LOS LISTENERS
+    let selectedShip = null;
+    let shipSize = 0;
+    let dir = "horizontal";
+    let queue = [];
+
+    // --- Listener solo una vez ---
+    board.addEventListener("mouseenter", e => {
+      if (!selectedShip) return;
+      if (!e.target.classList.contains("boardSquare")) return;
+
+      const rootSqr = e.target.classList[3];
+      let imgClass = "";
+
+      for (let i = 0; i < shipSize; i++) {
+        const className = this.getNextSquare(rootSqr, i, dir);
+        const sqr = document.querySelector("." + className);
+        let imgClass = "";
+        if (shipSize === 1) {
+          imgClass = "sp";
+        } else if (shipSize === 2) {
+          imgClass = "mp";
+        } else if (shipSize === 3) {
+          imgClass = "lp";
+        } else if (shipSize === 4) {
+          imgClass = "xlp";
+        }
+        if (sqr) sqr.classList.add("placingHover", imgClass);
+      }
+    }, true);
+
+    // --- Listener solo una vez ---
+    board.addEventListener("mouseleave", e => {
+      if (!selectedShip) return;
+      if (!e.target.classList.contains("boardSquare")) return;
+
+      const rootSqr = e.target.classList[3];
+
+      for (let i = 0; i < shipSize; i++) {
+        const className = this.getNextSquare(rootSqr, i, dir);
+        const sqr = document.querySelector("." + className);
+        let imgClass = "";
+        if (shipSize === 1) {
+          imgClass = "sp";
+        } else if (shipSize === 2) {
+          imgClass = "mp";
+        } else if (shipSize === 3) {
+          imgClass = "lp";
+        } else if (shipSize === 4) {
+          imgClass = "xlp";
+        }
+        if (sqr) sqr.classList.remove("placingHover", imgClass);
+      }
+    }, true);
+
+    // --- Listener solo una vez ---
+    board.addEventListener("click", e => {
+      if (!selectedShip) return;
+      if (!e.target.classList.contains("boardSquare")) return;
+
+      const coord = this.translateCoord(e.target.classList[3]);
+
+      player.board.placeShip(selectedShip.pop(), coord, dir);
+
+      // Cuando ya se colocaron todos los barcos de ese tipo
+      if (selectedShip.length === 0) {
+        selectedShip = null;
+        shipSize = 0;
+      }
+    });
+
+    // --- SELECCIONAR BARCOS  ---
+    shipModule.addEventListener("click", e => {
+      if (e.target.closest(".dirBtn")) {
+        dir = shipModule.querySelector(".shipDisplay").classList[1];
+      }
+      const item = e.target.closest(".shipImgCont");
+      if (!item) return;
+      //APPLY SELECTED CLASSNAME
+      if (!item.classList.contains("selected")) {
+        item.classList.add("selected");
+        let selected = document.querySelectorAll(".selected");
+        if (selected.length > 1) {
+          for (const s of selected) {
+            if (s !== item) {
+              s.classList.remove("selected");
+            }
+          }
+        }
+      } else {
+        item.classList.remove("selected");
+      }
+
+      if (item.classList.contains("smallShip")) {
+        selectedShip = small;
+        shipSize = 1;
+      } else if (item.classList.contains("mediumShip")) {
+        selectedShip = mid;
+        shipSize = 2;
+      } else if (item.classList.contains("largeShip")) {
+        selectedShip = large;
+        shipSize = 3;
+      } else if (item.classList.contains("largestShip")) {
+        selectedShip = largest;
+        shipSize = 4;
+      }
+    });
+  }
   inputCoordinates() {
     //MOCK INPUT
     const shipPositions = [[4, 4], [3, 3], [0, 0]]; /*[9, 3], [8, 1], [8, 5], [9, 7], [5, 0], [6, 7], [1, 8],*/
@@ -123,8 +244,8 @@ class GamePlay {
   }
   createShips() {
     //MOCK INPUT
-    //const small = [new Ship(1), new Ship(1), new Ship(1), new Ship(1)];
-    //const mid = [new Ship(2), new Ship(2), new Ship(2)];
+    const small = [new Ship(1), new Ship(1), new Ship(1), new Ship(1)];
+    const mid = [new Ship(2), new Ship(2), new Ship(2)];
     const large = [new Ship(3), new Ship(3)];
     const largest = [new Ship(4)];
     //return small.concat(mid, large, largest);
@@ -272,6 +393,25 @@ class GamePlay {
 
     return [row, col];
   }
+
+  getNextSquare(root, i, dir) {
+    const letter = root[0];          // "a"
+    const num = parseInt(root.slice(1)); // 1, 2, 10...
+
+    const alphabet = "abcdefghij";
+    const letterIndex = alphabet.indexOf(letter);
+
+    if (dir === "horizontal") {
+      // MISMA letra, número crece
+      return letter + (num + i);
+    }
+
+    if (dir === "vertical") {
+      // letra cambia, número se mantiene
+      return alphabet[letterIndex + i] + num;
+    }
+  }
+
   hasCoord(arr, coord) {
     return arr.some(([x, y]) => x === coord[0] && y === coord[1]);
   }

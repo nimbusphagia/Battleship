@@ -2,6 +2,8 @@ import smallShip from "../assets/icons/ship1.png";
 import mediumShip from "../assets/icons/ship2.png";
 import largeShip from "../assets/icons/ship3.png";
 import largestShip from "../assets/icons/ship4.png";
+import horizontal from "../assets/icons/horizontal.png";
+import vertical from "../assets/icons/vertical.png";
 function shipHelper(s = 4, m = 3, l = 2, xl = 1) {
   const small = s;
   const medium = m;
@@ -16,16 +18,33 @@ function shipHelper(s = 4, m = 3, l = 2, xl = 1) {
     indication.classList.add("placeIndication");
     const text = document.createElement("h3");
     text.textContent = "Place your ships strategically";
+    const dirBtn = document.createElement("div");
+    dirBtn.classList.add("dirBtn");
+    const dirImg = document.createElement("img");
+    dirImg.src = horizontal;
+    dirBtn.appendChild(dirImg);
+
     indication.appendChild(text);
+    indication.appendChild(dirBtn);
     module.appendChild(indication);
     //SHIPS
     const shipDisplay = document.createElement("div");
-    shipDisplay.classList.add("shipDisplay");
+    shipDisplay.classList.add("shipDisplay", "horizontal");
     shipDisplay.appendChild(renderShip(small, "smallShip"));
     shipDisplay.appendChild(renderShip(medium, "mediumShip"));
     shipDisplay.appendChild(renderShip(large, "largeShip"));
     shipDisplay.appendChild(renderShip(largest, "largestShip"));
     module.appendChild(shipDisplay);
+    //DIRECTION ICON 
+    dirBtn.addEventListener("click", () => {
+      if (shipDisplay.classList.contains("horizontal")) {
+        dirImg.src = vertical;
+        shipDisplay.classList.replace("horizontal", "vertical");
+      } else if (shipDisplay.classList.contains("vertical")) {
+        dirImg.src = horizontal;
+        shipDisplay.classList.replace("vertical", "horizontal");
+      }
+    });
     //BUTTONS
     const btnCont = document.createElement("div");
     btnCont.classList.add("shipModuleBtns");
@@ -41,8 +60,6 @@ function shipHelper(s = 4, m = 3, l = 2, xl = 1) {
     return module;
   }
   function renderShip(size, className = null) {
-    const node = document.createElement("div");
-    node.classList.add("shipContainer");
     const shipItem = document.createElement("div");
     if (className) {
       shipItem.classList.add("shipItem", className);
@@ -54,11 +71,7 @@ function shipHelper(s = 4, m = 3, l = 2, xl = 1) {
     shipCounter.textContent = size;
     shipItem.appendChild(shipCounter);
     shipItem.appendChild(shipImgCont);
-    const dirBtn = document.createElement("button");
-    dirBtn.classList.add("dirBtn");
-    dirBtn.textContent = "↺";
-    node.appendChild(shipItem);
-    node.appendChild(dirBtn);
+
     //PERSONALIZE ACCORDING TO SIZE
     let imgSrc;
     let imgClass;
@@ -66,33 +79,35 @@ function shipHelper(s = 4, m = 3, l = 2, xl = 1) {
     switch (size) {
       case small:
         imgSrc = smallShip;
-        imgClass = "small";
+        imgClass = "smallShip";
         reps = 1;
         break;
       case medium:
         imgSrc = mediumShip;
-        imgClass = "medium";
+        imgClass = "mediumShip";
         reps = 2;
 
         break;
       case large:
         imgSrc = largeShip;
-        imgClass = "large";
+        imgClass = "largeShip";
         reps = 3;
         break;
       case largest:
         imgSrc = largestShip;
-        imgClass = "largest"
+        imgClass = "largestShip"
         reps = 4;
         break;
     }
     for (let i = 0; i < reps; i++) {
       const shipImg = document.createElement("img");
-      shipImg.classList.add("shipImg", imgClass);
+      shipImg.classList.add("shipImg");
       shipImg.src = imgSrc;
       shipImgCont.appendChild(shipImg);
     }
-    return node;
+    //EVENT
+    shipImgCont.classList.add(imgClass);
+    return shipItem;
   }
   return display();
 }

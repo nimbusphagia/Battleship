@@ -94,7 +94,6 @@ class GameStart {
         this.#p2 = new Player(p2Input.value, true);
       }
       if (this.#p1 && this.#p2) {
-        console.log(this.#p1, this.#p2);
         const popup = form.parentElement;
         this.gui.removeVeil(popup);
       }
