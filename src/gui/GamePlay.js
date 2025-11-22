@@ -80,13 +80,9 @@ class GamePlay {
           this.enablePlacing(startBtn, opponentNode, nodeBoard, player);
 
         }
-        //Get coordinates & Place Ships
-        /*const coordinates = this.inputCoordinates();
-        const ships = this.createShips();
 
-        for (let i = 0; i < ships.length; i++) {
-          player.board.placeShip(ships[i], coordinates[i], "hor");
-        }        //STOP PLACING PHASE
+        //STOP PLACING PHASE
+        /*
         if (!this.players[1].type) {
           this.gui.removeMultiVeil("multiVeil");
           document.querySelector(".computingIndicator").remove();
@@ -129,85 +125,62 @@ class GamePlay {
     const large = [new Ship(3), new Ship(3)];
     const largest = [new Ship(4)];
 
-    // VARIABLES DE ESTADO MANEJADAS POR LOS LISTENERS
+    // STATE VARIABLES
     let selectedShip = null;
     let shipSize = 0;
     let dir = "horizontal";
     let queue = [];
 
-    // --- Listener solo una vez ---
+    // MOUSE ENTER
     board.addEventListener("mouseenter", e => {
       if (!selectedShip) return;
       if (!e.target.classList.contains("boardSquare")) return;
 
       const rootSqr = e.target.classList[3];
-      let imgClass = "";
+      this.projectAdjacentShips(rootSqr, shipSize, dir, "placingHover", true);
 
-      for (let i = 0; i < shipSize; i++) {
-        const className = this.getNextSquare(rootSqr, i, dir);
-        const sqr = document.querySelector("." + className);
-        let imgClass = "";
-        if (shipSize === 1) {
-          imgClass = "sp";
-        } else if (shipSize === 2) {
-          imgClass = "mp";
-        } else if (shipSize === 3) {
-          imgClass = "lp";
-        } else if (shipSize === 4) {
-          imgClass = "xlp";
-        }
-        if (sqr) sqr.classList.add("placingHover", imgClass);
-      }
     }, true);
 
-    // --- Listener solo una vez ---
+    // MOUSE LEAVE
     board.addEventListener("mouseleave", e => {
       if (!selectedShip) return;
       if (!e.target.classList.contains("boardSquare")) return;
 
       const rootSqr = e.target.classList[3];
-
-      for (let i = 0; i < shipSize; i++) {
-        const className = this.getNextSquare(rootSqr, i, dir);
-        const sqr = document.querySelector("." + className);
-        let imgClass = "";
-        if (shipSize === 1) {
-          imgClass = "sp";
-        } else if (shipSize === 2) {
-          imgClass = "mp";
-        } else if (shipSize === 3) {
-          imgClass = "lp";
-        } else if (shipSize === 4) {
-          imgClass = "xlp";
-        }
-        if (sqr) sqr.classList.remove("placingHover", imgClass);
-      }
+      this.projectAdjacentShips(rootSqr, shipSize, dir, "placingHover", false);
     }, true);
 
-    // --- Listener solo una vez ---
+    // CLICK
     board.addEventListener("click", e => {
       if (!selectedShip) return;
       if (!e.target.classList.contains("boardSquare")) return;
+      if (e.target.classList.contains("tempPlaced")) return;
+      const sqr = e.target;
+      const className = sqr.classList[3];
+      if (this.projectAdjacentShips(className, shipSize, dir, "tempPlaced", true) !== false) {
+        const coord = this.translateCoord(className);
+        queue.push([selectedShip.pop(), coord, dir]);
+        this.updateShipCounters(small, mid, large, largest);
+      }
 
-      const coord = this.translateCoord(e.target.classList[3]);
-
-      player.board.placeShip(selectedShip.pop(), coord, dir);
-
-      // Cuando ya se colocaron todos los barcos de ese tipo
+      // ALL SHIPS USED 
       if (selectedShip.length === 0) {
         selectedShip = null;
         shipSize = 0;
       }
+      if (queue.length === 10) {
+        document.querySelector(".playBtn").classList.replace("disabled", "enabled");
+      }
     });
 
-    // --- SELECCIONAR BARCOS  ---
+    // SELECT SHIPS
     shipModule.addEventListener("click", e => {
       if (e.target.closest(".dirBtn")) {
         dir = shipModule.querySelector(".shipDisplay").classList[1];
       }
       const item = e.target.closest(".shipImgCont");
       if (!item) return;
-      //APPLY SELECTED CLASSNAME
+      // APPLY SELECTED CLASSNAME
       if (!item.classList.contains("selected")) {
         item.classList.add("selected");
         let selected = document.querySelectorAll(".selected");
@@ -236,21 +209,66 @@ class GamePlay {
         shipSize = 4;
       }
     });
+
+    const buttonContainer = shipModule.querySelector("shipModuleBtns");
+    if (buttonContainer) buttonContainer.addEventListener("click", (e) => {
+      if (e.target.classList.contains("playBtn") && e.target.classList.includes("enabled")) {
+        // PLACE QUEUED SHIPS
+        for (const item of queue) {
+          player.board.placeShip(item[0], item[1], item[2]);
+        }
+      }
+    })
   }
-  inputCoordinates() {
-    //MOCK INPUT
-    const shipPositions = [[4, 4], [3, 3], [0, 0]]; /*[9, 3], [8, 1], [8, 5], [9, 7], [5, 0], [6, 7], [1, 8],*/
-    return shipPositions;
+  projectAdjacentShips(sqrClass, shipSize, dir, stateClass, add = true) {
+    const queue = [];
+    for (let i = 0; i < shipSize; i++) {
+      const className = this.getNextSquare(sqrClass, i, dir);
+
+      if (className === false) {
+        queue.push(false);
+      } else {
+        const sqr = document.querySelector("." + className);
+
+        if (!sqr) {
+          queue.push(false);             // out of bounds / not found
+        } else if (sqr.classList.contains("tempPlaced")) {
+          queue.push(false);             // already occupied
+        } else {
+          queue.push(sqr);               // valid square
+        }
+      }
+    }
+    let imgClass = "";
+    let id = stateClass[0];
+    if (shipSize === 1) {
+      imgClass = "sp" + id;
+    } else if (shipSize === 2) {
+      imgClass = "mp" + id;
+    } else if (shipSize === 3) {
+      imgClass = "lp" + id;
+    } else if (shipSize === 4) {
+      imgClass = "xlp" + id;
+    }
+    if (!queue.includes(false)) {
+      for (const sqr of queue) {
+        if (add) {
+          sqr.classList.add(stateClass, imgClass);
+        } else {
+          sqr.classList.remove(stateClass, imgClass);
+        }
+      }
+    } else {
+      return false;
+    }
   }
-  createShips() {
-    //MOCK INPUT
-    const small = [new Ship(1), new Ship(1), new Ship(1), new Ship(1)];
-    const mid = [new Ship(2), new Ship(2), new Ship(2)];
-    const large = [new Ship(3), new Ship(3)];
-    const largest = [new Ship(4)];
-    //return small.concat(mid, large, largest);
-    return large.concat(largest);
+  updateShipCounters(s, m, l, xl) {
+    document.querySelector(".smallShip .shipCounter").textContent = s.length;
+    document.querySelector(".mediumShip .shipCounter").textContent = m.length;
+    document.querySelector(".largeShip .shipCounter").textContent = l.length;
+    document.querySelector(".largestShip .shipCounter").textContent = xl.length;
   }
+
   playGame() {
     this.currentPlayer = this.players[0];
     this.currentOpponent = this.players[1];
@@ -394,23 +412,33 @@ class GamePlay {
     return [row, col];
   }
 
+
   getNextSquare(root, i, dir) {
-    const letter = root[0];          // "a"
-    const num = parseInt(root.slice(1)); // 1, 2, 10...
+    const letter = root[0];               // "a"
+    const num = parseInt(root.slice(1));  // 1, 2, 10...
 
     const alphabet = "abcdefghij";
     const letterIndex = alphabet.indexOf(letter);
 
     if (dir === "horizontal") {
-      // MISMA letra, número crece
-      return letter + (num + i);
+      const finalNum = num + i;
+      if (finalNum > 10) return false;
+      return letter + finalNum;
     }
 
     if (dir === "vertical") {
-      // letra cambia, número se mantiene
-      return alphabet[letterIndex + i] + num;
+      const nextIndex = letterIndex + i;
+
+      // si se pasa de 'j' o queda por debajo de 'a'
+      if (nextIndex < 0 || nextIndex >= alphabet.length) {
+        return false;
+      }
+
+      const finalLetter = alphabet[nextIndex];
+      return finalLetter + num;
     }
   }
+
 
   hasCoord(arr, coord) {
     return arr.some(([x, y]) => x === coord[0] && y === coord[1]);

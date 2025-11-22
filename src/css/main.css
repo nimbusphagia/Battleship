@@ -702,13 +702,27 @@ label[for^="p"] {
   color: var(--navColor);
 }
 
-.shipModule .playBtn {
+.shipModule .playBtn.disabled {
+  color: var(--blocked);
+  border-bottom: 4px solid var(--blocked);
+}
+
+.playBtn.disabled:hover {
+  pointer-events: none;
+  transform: none;
+  box-shadow: none;
+}
+
+.shipModule .playBtn.enabled {
   color: var(--shipHit);
   border-radius: 0;
   border-bottom: 4px solid var(--shipHit);
 }
 
-.shipModule .playBtn:hover {
+.shipModule .playBtn.enabled:hover {
+  border-radius: 5px;
+  border-color: black;
+  color: white;
   background-color: var(--shipHit);
 }
 
@@ -753,18 +767,29 @@ label[for^="p"] {
   cursor: pointer;
 }
 
-.sp {
+.placing .tempPlaced {
+  background-position: center;
+  background-size: 75%;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.spp,
+.spt {
   background-image: url("../assets/icons/ship1.png");
 }
 
-.mp {
+.mpp,
+.mpt {
   background-image: url("../assets/icons/ship2.png");
 }
 
-.lp {
+.lpp,
+.lpt {
   background-image: url("../assets/icons/ship3.png");
 }
 
-.xlp {
+.xlpp,
+.xlpt {
   background-image: url("../assets/icons/ship4.png");
 }

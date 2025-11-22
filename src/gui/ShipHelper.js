@@ -49,7 +49,7 @@ function shipHelper(s = 4, m = 3, l = 2, xl = 1) {
     const btnCont = document.createElement("div");
     btnCont.classList.add("shipModuleBtns");
     const submitBtn = document.createElement("button");
-    submitBtn.classList.add("btn", "playBtn");
+    submitBtn.classList.add("btn", "playBtn", "disabled");
     submitBtn.textContent = "Ready";
     const resetBtn = document.createElement("button");
     resetBtn.classList.add("btn", "resetPlaceBtn");
