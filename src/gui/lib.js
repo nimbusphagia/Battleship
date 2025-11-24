@@ -50,6 +50,14 @@ function lib() {
     veil.remove();
     node.classList.remove("ontop");
   }
-  return { veil, removeVeil, multiVeil, removeMultiVeil }
+  const boardStatus = (nodeBoard, text, className) => {
+    const status = document.createElement("div");
+    status.classList.add(className);
+    status.textContent = text;
+    nodeBoard.appendChild(status);
+    multiVeil(nodeBoard, status);
+
+  }
+  return { veil, removeVeil, multiVeil, removeMultiVeil, boardStatus }
 }
 export default lib;

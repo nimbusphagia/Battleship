@@ -36,21 +36,21 @@ class Gameboard {
     return map;
   }
   validateMove(ship, startP, dir) {
-    if (dir !== "ver" && dir !== "hor") throw new Error("Invalid direction");
+    if (dir !== "vertical" && dir !== "horizontal") throw new Error("Invalid direction");
 
     const [x, y] = startP;
     if (
-      (dir === "ver" && x + ship.length > 10) ||
-      (dir === "hor" && y + ship.length > 10)
+      (dir === "vertical" && x + ship.length > 10) ||
+      (dir === "horizontal" && y + ship.length > 10)
     ) {
       throw new Error("Square out of range");
     }
     for (let i = 0; i < ship.length; i++) {
       let currentSquare;
-      if (dir === "ver") {
+      if (dir === "vertical") {
         currentSquare = this.#board[x + i][y];
       }
-      if (dir === "hor") {
+      if (dir === "horizontal") {
         currentSquare = this.#board[x][y + i];
       }
       if (currentSquare.ship !== null) {
@@ -64,10 +64,10 @@ class Gameboard {
       this.validateMove(ship, startP, dir);
       for (let i = 0; i < ship.length; i++) {
         let currentSquare;
-        if (dir === "ver") {
+        if (dir === "vertical") {
           currentSquare = this.#board[x + i][y];
         }
-        if (dir === "hor") {
+        if (dir === "horizontal") {
           currentSquare = this.#board[x][y + i];
         }
         currentSquare.ship = ship;

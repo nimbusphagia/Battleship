@@ -98,11 +98,7 @@ class GamePlay {
 
       })
     } else {
-      const computingSign = document.createElement("div");
-      computingSign.classList.add("computingIndicator");
-      computingSign.textContent = "Automatically generated";
-      nodeBoard.appendChild(computingSign);
-      this.gui.multiVeil(nodeBoard, computingSign);
+      this.gui.boardStatus(nodeBoard, "Automatically generated", "computingIndicator");
       const coordinates = this.inputCoordinates();
       const ships = this.createShips();
       for (let i = 0; i < ships.length; i++) {
@@ -117,13 +113,14 @@ class GamePlay {
     opponentNode.classList.add("relative");
     opponentNode.appendChild(shipModule);
     this.gui.removeMultiVeil("", startBtn);
-    startBtn.style.display = "none";
+    //startBtn.style.display = "none";
+    startBtn.remove();
     board.classList.add("placing");
 
-    const small = [new Ship(1), new Ship(1), new Ship(1), new Ship(1)];
-    const mid = [new Ship(2), new Ship(2), new Ship(2)];
-    const large = [new Ship(3), new Ship(3)];
-    const largest = [new Ship(4)];
+    let small = [new Ship(1), new Ship(1), new Ship(1), new Ship(1)];
+    let mid = [new Ship(2), new Ship(2), new Ship(2)];
+    let large = [new Ship(3), new Ship(3)];
+    let largest = [new Ship(4)];
 
     // STATE VARIABLES
     let selectedShip = null;
@@ -132,23 +129,23 @@ class GamePlay {
     let queue = [];
 
     // MOUSE ENTER
-    board.addEventListener("mouseenter", e => {
+    board.addEventListener("mouseover", e => {
       if (!selectedShip) return;
       if (!e.target.classList.contains("boardSquare")) return;
 
       const rootSqr = e.target.classList[3];
-      this.projectAdjacentShips(rootSqr, shipSize, dir, "placingHover", true);
+      this.projectAdjacentShips(board, rootSqr, shipSize, dir, "placingHover", true);
 
-    }, true);
+    });
 
     // MOUSE LEAVE
-    board.addEventListener("mouseleave", e => {
+    board.addEventListener("mouseout", e => {
       if (!selectedShip) return;
       if (!e.target.classList.contains("boardSquare")) return;
 
       const rootSqr = e.target.classList[3];
-      this.projectAdjacentShips(rootSqr, shipSize, dir, "placingHover", false);
-    }, true);
+      this.projectAdjacentShips(board, rootSqr, shipSize, dir, "placingHover", false);
+    });
 
     // CLICK
     board.addEventListener("click", e => {
@@ -157,7 +154,7 @@ class GamePlay {
       if (e.target.classList.contains("tempPlaced")) return;
       const sqr = e.target;
       const className = sqr.classList[3];
-      if (this.projectAdjacentShips(className, shipSize, dir, "tempPlaced", true) !== false) {
+      if (this.projectAdjacentShips(board, className, shipSize, dir, "tempPlaced", true) !== false) {
         const coord = this.translateCoord(className);
         queue.push([selectedShip.pop(), coord, dir]);
         this.updateShipCounters(small, mid, large, largest);
@@ -170,6 +167,8 @@ class GamePlay {
       }
       if (queue.length === 10) {
         document.querySelector(".playBtn").classList.replace("disabled", "enabled");
+        //CHECK QUEUE 
+        //console.log(queue[0][0]);
       }
     });
 
@@ -180,47 +179,101 @@ class GamePlay {
       }
       const item = e.target.closest(".shipImgCont");
       if (!item) return;
-      // APPLY SELECTED CLASSNAME
-      if (!item.classList.contains("selected")) {
-        item.classList.add("selected");
-        let selected = document.querySelectorAll(".selected");
-        if (selected.length > 1) {
-          for (const s of selected) {
-            if (s !== item) {
-              s.classList.remove("selected");
+      const counter = item.parentElement.querySelector(".shipCounter")
+      if (!counter) return;
+      if (counter.textContent !== "0") {
+        // APPLY SELECTED CLASSNAME
+        if (!item.classList.contains("selected")) {
+          item.classList.add("selected");
+          let selected = document.querySelectorAll(".selected");
+          if (selected.length > 1) {
+            for (const s of selected) {
+              if (s !== item) {
+                s.classList.remove("selected");
+              }
             }
           }
+          if (item.classList.contains("smallShip")) {
+            selectedShip = small;
+            shipSize = 1;
+          } else if (item.classList.contains("mediumShip")) {
+            selectedShip = mid;
+            shipSize = 2;
+          } else if (item.classList.contains("largeShip")) {
+            selectedShip = large;
+            shipSize = 3;
+          } else if (item.classList.contains("largestShip")) {
+            selectedShip = largest;
+            shipSize = 4;
+          }
+        } else {
+          item.classList.remove("selected");
         }
-      } else {
-        item.classList.remove("selected");
       }
 
-      if (item.classList.contains("smallShip")) {
-        selectedShip = small;
-        shipSize = 1;
-      } else if (item.classList.contains("mediumShip")) {
-        selectedShip = mid;
-        shipSize = 2;
-      } else if (item.classList.contains("largeShip")) {
-        selectedShip = large;
-        shipSize = 3;
-      } else if (item.classList.contains("largestShip")) {
-        selectedShip = largest;
-        shipSize = 4;
-      }
     });
 
-    const buttonContainer = shipModule.querySelector("shipModuleBtns");
+    const buttonContainer = shipModule.querySelector(".shipModuleBtns");
     if (buttonContainer) buttonContainer.addEventListener("click", (e) => {
-      if (e.target.classList.contains("playBtn") && e.target.classList.includes("enabled")) {
-        // PLACE QUEUED SHIPS
+      // RESET PLACING PROCESS
+      if (e.target.classList.contains("resetPlaceBtn")) {
+        const paintedSqrs = board.querySelectorAll(".placingHover");
+        paintedSqrs.forEach((s) => {
+          s.classList.remove("placingHover", "tempPlaced", "spp", "mpp", "lpp", "xlpp", "spt", "mpt", "lpt", "xlpt")
+          small = [new Ship(1), new Ship(1), new Ship(1), new Ship(1)];
+          mid = [new Ship(2), new Ship(2), new Ship(2)];
+          large = [new Ship(3), new Ship(3)];
+          largest = [new Ship(4)];
+          selectedShip = null;
+          queue = [];
+          shipSize = 0;
+          const selectedNode = document.querySelector(".selected");
+          if (selectedNode) selectedNode.classList.remove("selected");
+          this.updateShipCounters(small, mid, large, largest);;
+        })
+      }
+      // FINISH PLACING SHIPS
+      if (e.target.classList.contains("playBtn") && e.target.classList.contains("enabled")) {
+        const newBoard = this.createBoard();
+        board.replaceWith(newBoard);
+        this.gui.boardStatus(newBoard, "Player Ready", "boardStatus");
         for (const item of queue) {
+          //console.log(item[0]);
+          //console.log(item[1]);
+          //console.log(item[2]);
           player.board.placeShip(item[0], item[1], item[2]);
         }
+        //CHECK PUSHED QUEUE
+        //console.log(player.board.ships);
+        player.status = true;
+        if (this.players[0].status && this.players[1].status) {
+          //console.log(this.players[0].board.ships, this.players[1].board.ships);
+          const startGameBtn = document.createElement("button");
+          startGameBtn.textContent = "Start";
+          startGameBtn.classList.add("startGameBtn");
+          const main = document.querySelector("main");
+          main.appendChild(startGameBtn);
+          this.gui.veil(main, startGameBtn);
+          const boardSigns = document.querySelectorAll(".boardStatus");
+          boardSigns.forEach((n) => {
+            n.style.zIndex = "5";
+            n.style.border = "none";
+            n.style.color = "black";
+          });
+          startGameBtn.addEventListener("click", () => {
+            this.gui.removeVeil(startGameBtn);
+            boardSigns.forEach((b) => b.remove());
+            this.gui.removeMultiVeil("boardStatus");
+            this.playGame();
+            this.phase = 2;
+            startGameBtn.remove();
+          })
+        }
+        shipModule.remove();
       }
     })
   }
-  projectAdjacentShips(sqrClass, shipSize, dir, stateClass, add = true) {
+  projectAdjacentShips(board, sqrClass, shipSize, dir, stateClass, add = true) {
     const queue = [];
     for (let i = 0; i < shipSize; i++) {
       const className = this.getNextSquare(sqrClass, i, dir);
@@ -228,7 +281,7 @@ class GamePlay {
       if (className === false) {
         queue.push(false);
       } else {
-        const sqr = document.querySelector("." + className);
+        const sqr = board.querySelector("." + className);
 
         if (!sqr) {
           queue.push(false);             // out of bounds / not found
