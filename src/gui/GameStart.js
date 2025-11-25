@@ -15,6 +15,7 @@ class GameStart {
     this.main = document.querySelector("main");
     this.footer = document.querySelector("footer");
     this.gui = lib();
+    this.inputData = this.inputData.bind(this);
   }
   get p1() { return this.#p1 };
   get p2() { return this.#p2 };
@@ -78,31 +79,30 @@ class GameStart {
     const player2 = this.createPlayerForm(p2);
     const btn = document.createElement("button");
     btn.classList.add("formBtn");
-    btn.type = "button";
     btn.textContent = "Start";
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      const p1Input = document.getElementById("p1Input");
-      const p2Input = document.getElementById("p2Input");
-      const pcInput = document.getElementById("pcInput");
-      if (p1Input.value !== "") {
-        this.#p1 = new Player(p1Input.value, true);
-      }
-      if (pcInput && pcInput.value !== "") {
-        this.#p2 = new Player(pcInput.value, false);
-      } else if (p2Input && p2Input.value !== "") {
-        this.#p2 = new Player(p2Input.value, true);
-      }
-      if (this.#p1 && this.#p2) {
-        const popup = form.parentElement;
-        this.gui.removeVeil(popup);
-      }
-    });
-
+    btn.addEventListener("click", (e) => this.inputData(form, e));
     form.appendChild(player1);
     form.appendChild(player2);
     form.appendChild(btn);
     return form;
+  }
+  inputData(form, e) {
+    const p1Input = document.getElementById("p1Input");
+    const p2Input = document.getElementById("p2Input");
+    const pcInput = document.getElementById("pcInput");
+    if (p1Input.value !== "") {
+      this.#p1 = new Player(p1Input.value, true);
+    }
+    if (pcInput && pcInput.value !== "") {
+      this.#p2 = new Player(pcInput.value, false);
+    } else if (p2Input && p2Input.value !== "") {
+      this.#p2 = new Player(p2Input.value, true);
+    }
+    if (this.#p1 && this.#p2) {
+      const popup = form.parentElement;
+      this.gui.removeVeil(popup);
+    }
+
   }
   createPlayerForm(playerTitle) {
     let inputId = "";

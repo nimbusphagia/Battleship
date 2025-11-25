@@ -77,6 +77,23 @@ class Gameboard {
       return e.message;
     }
   }
+  placeRandomShip(ship) {
+    while (true) {
+      const dir = Math.random() < 0.5 ? "horizontal" : "vertical";
+
+      const x = Math.floor(Math.random() * 10); // 0-9
+      const y = Math.floor(Math.random() * 10);      // 0-9
+
+      const result = this.placeShip(ship, [x, y], dir);
+
+      if (typeof result !== "string") {
+        // successful placement
+        return true;
+      }
+    }
+  }
+
+
   receiveAttack(coord) {
     const [x, y] = coord;
     const square = this.#board[x][y];

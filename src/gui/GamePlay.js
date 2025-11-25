@@ -11,7 +11,7 @@ class GamePlay {
   constructor() {
     this.gui = lib();
     this.phase = 0;
-    this.generateCoords();
+    this.computedCoords = this.generateCoords();
   }
   createBoard() {
     const board = document.createElement("div");
@@ -80,31 +80,13 @@ class GamePlay {
           this.enablePlacing(startBtn, opponentNode, nodeBoard, player);
 
         }
-
-        //STOP PLACING PHASE
-        /*
-        if (!this.players[1].type) {
-          this.gui.removeMultiVeil("multiVeil");
-          document.querySelector(".computingIndicator").remove();
-        } else {
-          this.gui.removeMultiVeil("", startBtn);
-        }
-        startBtn.remove();
-        //CHECK FOR END OF PHASE - GO ON
-        if (this.players[0].board.ships.length === ships.length && this.players[1].board.ships.length === ships.length) {
-          this.phase = 2;
-          this.playGame();
-        } */
-
       })
     } else {
-      this.gui.boardStatus(nodeBoard, "Automatically generated", "computingIndicator");
-      const coordinates = this.inputCoordinates();
-      const ships = this.createShips();
-      for (let i = 0; i < ships.length; i++) {
-        player.board.placeShip(ships[i], coordinates[i], "hor");
-      }
-
+      //COMPUTER PLAYER
+      this.gui.boardStatus(nodeBoard, "Automatically generated", "boardStatus");
+      this.computeShipPlacement(player);
+      player.status = true;
+      console.log(player.board.board, player.board.ships);
     }
   }
 
@@ -238,16 +220,13 @@ class GamePlay {
         board.replaceWith(newBoard);
         this.gui.boardStatus(newBoard, "Player Ready", "boardStatus");
         for (const item of queue) {
-          //console.log(item[0]);
-          //console.log(item[1]);
-          //console.log(item[2]);
+
           player.board.placeShip(item[0], item[1], item[2]);
         }
         //CHECK PUSHED QUEUE
         //console.log(player.board.ships);
         player.status = true;
         if (this.players[0].status && this.players[1].status) {
-          //console.log(this.players[0].board.ships, this.players[1].board.ships);
           const startGameBtn = document.createElement("button");
           startGameBtn.textContent = "Start";
           startGameBtn.classList.add("startGameBtn");
@@ -393,7 +372,6 @@ class GamePlay {
     const parent = board.parentElement;
     const ships = parent.querySelector(".live .count");
     const sunk = parent.querySelector(".sunk .count");
-    console.log(parent, ships, sunk);
     ships.textContent = this.currentOpponent.board.ships.length;
     sunk.textContent = this.currentOpponent.board.sunkenShips.length;
   }
@@ -432,6 +410,14 @@ class GamePlay {
       game.removeEventListener("click", this.enablePlay);
     }
   }
+  computeShipPlacement(computer) {
+    const qShips = [new Ship(1), new Ship(1), new Ship(1), new Ship(1), new Ship(2), new Ship(2), new Ship(2), new Ship(3), new Ship(3), new Ship(4)];
+    for (const ship of qShips) {
+      computer.board.placeRandomShip(ship);
+    }
+    console.log(computer.board.ships);
+  }
+
   generateCoords() {
     const letters = "abcdefghij";
     const coords = [];
@@ -441,7 +427,7 @@ class GamePlay {
         coords.push(letter + n);
       }
     }
-    this.computedCoords = coords;
+    return coords;
   }
   getRandomUniqueCoord() {
     if (this.computedCoords.length === 0) return null; // no more coords
@@ -505,6 +491,9 @@ class GamePlay {
       this.showMessage(`${this.currentPlayer.name} wins!`, "msgWin");
       document.querySelector(".player1 > .board").classList.remove("playing");
       document.querySelector(".player2 > .board").classList.remove("playing");
+      const restartBtn = document.querySelector(".hiddenBtn");
+      restartBtn.style.display = "block";
+      this.gui.veil(document.querySelector("main"), restartBtn);
     }
   }
   showMessage(str, className = "") {

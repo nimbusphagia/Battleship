@@ -24,7 +24,8 @@ function renderGame() {
       }
     }
   });
-
-  //PLACE SHIPS
+  document.querySelector("resetGameBtn").addEventListener("click", () => {
+    play.emptyBoards();
+  })
 }
 export default renderGame;
